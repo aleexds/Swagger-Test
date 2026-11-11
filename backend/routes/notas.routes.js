@@ -17,7 +17,19 @@ const notaSchema = z.object({
  *     tags: [Notas]
  *     responses:
  *       200:
- *         description: Lista de notas obtenida con éxito
+ *         description: Lista de notas obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Nota'
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.get('/', async (req, res, next) => {
   try {
@@ -39,18 +51,26 @@ router.get('/', async (req, res, next) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required: [titulo, contenido]
- *             properties:
- *               titulo:
- *                 type: string
- *               contenido:
- *                 type: string
+ *             $ref: '#/components/schemas/NuevaNota'
  *     responses:
  *       201:
  *         description: Nota creada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Nota'
  *       400:
- *         description: Datos inválidos
+ *         description: Los datos enviados no cumplen la validación
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorValidacion'
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.post('/', validar(notaSchema), async (req, res, next) => {
   try {
@@ -75,9 +95,23 @@ router.post('/', validar(notaSchema), async (req, res, next) => {
  *           type: integer
  *     responses:
  *       200:
- *         description: Nota encontrada
+ *         description: Nota encontrada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Nota'
  *       404:
  *         description: Nota no encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.get('/:id', async (req, res, next) => {
   try {
@@ -105,6 +139,16 @@ router.get('/:id', async (req, res, next) => {
  *         description: Nota eliminada con éxito
  *       404:
  *         description: Nota no encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.delete('/:id', async (req, res, next) => {
   try {
@@ -129,9 +173,35 @@ router.delete('/:id', async (req, res, next) => {
  *           type: integer
  *     responses:
  *       200:
- *         description: Resumen generado exitosamente
+ *         description: Resumen generado exitosamente en tres viñetas breves en español
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ResumenNota'
  *       404:
  *         description: Nota no encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       429:
+ *         description: Límite de solicitudes del proveedor de IA alcanzado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       502:
+ *         description: El proveedor de IA no está disponible
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.post('/:id/resumen', async (req, res, next) => {
   try {

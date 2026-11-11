@@ -22,10 +22,34 @@ const preguntaSchema = z.object({
  *     responses:
  *       200:
  *         description: Respuesta del modelo obtenida con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaIA'
  *       400:
  *         description: Datos inválidos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorValidacion'
+ *       429:
+ *         description: Límite de solicitudes del proveedor de IA alcanzado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       502:
  *         description: IA no disponible
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.post('/preguntar', validar(preguntaSchema), async (req, res, next) => {
   try {
